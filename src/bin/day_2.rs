@@ -1,7 +1,6 @@
 use std::error::Error;
 use itertools::Itertools;
-use day_1::util::vecstuff;
-use crate::util::parsing;
+use crate::util::{parsing, vecstuff};
 use crate::util::parsing::{convert_strings_matrix, whitepsace_split};
 
 pub mod util;
