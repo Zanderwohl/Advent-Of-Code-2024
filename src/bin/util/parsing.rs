@@ -25,6 +25,20 @@ pub fn whitepsace_split(lines: Vec<String>) -> Vec<Vec<String>> {
     }).collect()
 }
 
+pub fn comma_split(lines: &Vec<String>) -> Vec<Vec<String>> {
+    generic_split(lines, ",")
+}
+
+pub fn pipe_split(lines: &Vec<String>) -> Vec<Vec<String>> {
+    generic_split(lines, "|")
+}
+
+pub fn generic_split(lines: &Vec<String>, on: &str) -> Vec<Vec<String>> {
+    lines.iter().map(|line| {
+        line.split(on).map(String::from).collect()
+    }).collect()
+}
+
 pub fn transpose<T: Debug + Clone>(vec: &Vec<Vec<T>>) -> Result<Vec<Vec<T>>, io::Error> {
     let size: usize = vec.len();
     if size == 0 {
