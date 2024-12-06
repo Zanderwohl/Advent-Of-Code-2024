@@ -14,7 +14,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     println!("Solution is:\n{}", solution);
 
     let similarity = similar(a, b);
-    println!("Smilarity is:\n{}", similarity);
+    println!("Similarity is:\n{}", similarity);
 
     Ok(())
 }

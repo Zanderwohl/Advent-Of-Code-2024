@@ -1,13 +1,16 @@
 # Advent of Code 2024
 
-Hi, I'm Alexander Lowry and these are my solutions to Avent of Code 2024.
+Hi, I'm Alexander Lowry and these are my solutions to [Advent of Code 2024](https://adventofcode.com/2024/).
 I used Rust because I like it!
 
-I benchmark my solutions with `hyperfine` and the `--release` flag.
+I benchmark my solutions with [hyperfine](https://github.com/sharkdp/hyperfine) and the `--release` flag.
+I haven't modified my `cargo.toml` yet, because I'm okay with the defaults for now :).
 
 ```hyperfine 'cargo run --bin day_{n} --release' --warmup 2```
 
 ## Day 1
+
+[Problem Text](https://adventofcode.com/2024/day/1)
 
 Created a utils modules to avoid boilerplate.
 We're always going to be parsing a bunch of from files, so I've added a bunch of file and Vec utilities.
@@ -29,7 +32,7 @@ Range (min … max):   163.4 ms … 191.4 ms    15 runs
 ```
 
 ## Day 2
-
+[Problem Text](https://adventofcode.com/2024/day/2)
 
 ### Benchmark
 
@@ -48,6 +51,7 @@ Benchmark 1: cargo run --bin day_2 --release
 ```
 
 ## Day 3
+[Problem Text](https://adventofcode.com/2024/day/3)
 
 ### Benchmark
 
@@ -66,6 +70,7 @@ Benchmark 1: cargo run --bin day_3 --release
 ```
 
 ## Day 4
+[Problem Text](https://adventofcode.com/2024/day/4)
 
 ### Benchmark
 
@@ -84,6 +89,7 @@ Benchmark 1: cargo run --bin day_4 --release
 ```
 
 ## Day 5
+[Problem Text](https://adventofcode.com/2024/day/5)
 
 ### Benchmark
 
@@ -103,6 +109,7 @@ Benchmark 1: cargo run --bin day_5 --release
 ```
 
 ## Day 6
+[Problem Text](https://adventofcode.com/2024/day/6)
 
 This problem really had me pulling my hair out on part 2.
 My original solution for part 1 was copying the whole map over and over to record the history,
