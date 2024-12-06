@@ -1,6 +1,7 @@
 mod util;
 
 use std::cmp::PartialEq;
+use std::collections::BinaryHeap;
 use std::error::Error;
 use std::fmt::{Display, Formatter};
 use crate::util::parsing;
@@ -13,6 +14,8 @@ fn main() -> Result<(), Box<dyn Error>> {
     let guess = count_visited_map(&new_map);
     println!("The number of unique spaces the guard visited was:\n{}", guess);
 
+    let obstacle_locations = find_obstacle_locations(&map, &new_map, guess);
+
     Ok(())
 }
 
@@ -20,7 +23,7 @@ fn run_map(map: &Map) -> Map {
     let mut running = true;
     let mut modified_map = map.clone();
     while running {
-        running = step_map(&mut modified_map);
+        (running, _) = step_map(&mut modified_map);
     }
     modified_map
 }
@@ -28,7 +31,7 @@ fn run_map(map: &Map) -> Map {
 fn count_visited_map(map: &Map) -> usize {
     map.cells.iter().map(|row| {
         row.iter().map(|cell| {
-            (*cell).same(&Cell::Visited) as usize
+            (*cell).same(&Cell::Visited(VisitHistory::default())) as usize
         }).sum::<usize>()
     }).sum::<usize>()
 }
@@ -42,43 +45,48 @@ fn print_map(map: &Map) {
     }
 }
 
-fn step_map(mut map: &mut Map) -> bool {
+fn step_map(mut map: &mut Map) -> (bool, bool) {
     let y_len = map.cells.len();
     if y_len == 0 {
-        return false
+        return (false, false)
+    }
+    let (x, y) = (map.guard.x as usize, map.guard.y as usize);
+
+    //if map.cells[y][x].same(&Cell::Unvisited) {
+        map.cells[y][x] = Cell::Visited(VisitHistory::default());
+    //}
+    match &mut map.cells[y][x] {
+        Cell::Visited(history) => {
+            history.add(&map.guard.dir)
+        }
+        _ => {}
     }
 
-    let (x, y) = map.guard;
-    let x = x as usize;
-    let y = y as usize;
-
-    let guard = map.cells[y][x].clone();
-    map.cells[y][x] = Cell::Visited;
-    let (dx, dy, turn) = match guard {
-        Cell::GuardUp => (0, -1, &Cell::GuardRight),
-        Cell::GuardDown => (0, 1, &Cell::GuardLeft),
-        Cell::GuardLeft => (-1, 0, &Cell::GuardUp),
-        Cell::GuardRight => (1, 0, &Cell::GuardDown),
-        _ => panic!("Can't happen"),
-    };
+    let (dx, dy) = map.guard.next_action();
     let next_cell = get_map(&map, (x as isize) + dx, (y as isize) + dy);
     match next_cell {
-        None => return false,
+        None => (false, false),
         Some(next_cell) => {
             let running = match next_cell {
-                Cell::Unvisited => set_guard(&mut map, (x as isize) + dx, (y as isize) + dy, &guard),
-                Cell::Visited => set_guard(&mut map, (x as isize) + dx, (y as isize) + dy, &guard),
+                Cell::Unvisited => {
+                    set_guard(&mut map, (x as isize) + dx, (y as isize) + dy)
+                },
+                Cell::Visited(visit_history) => {
+                    set_guard(&mut map, (x as isize) + dx, (y as isize) + dy)
+                },
                 Cell::Crate => {
-                    map.cells[y][x] = turn.clone();
+                    map.guard.turn();
                     true
                 },
+                Cell::Obstruction => {
+                    map.guard.turn();
+                    true
+                }
                 _ => panic!("Can't handle multiple guards!"),
             };
-            return running
+            (running, false)
         }
     }
-
-    true
 }
 
 fn within_map(map: &Map, x: isize, y: isize) -> bool {
@@ -94,10 +102,11 @@ fn get_map(map: &Map, x: isize, y: isize) -> Option<Cell> {
     }
 }
 
-fn set_guard(mut map: &mut Map, x: isize, y: isize, cell: &Cell) -> bool {
-    let success = set_map(&mut map, x, y, cell);
+fn set_guard(mut map: &mut Map, x: isize, y: isize) -> bool {
+    let success = within_map(&mut map, x, y);
     if success {
-        map.guard = (x, y);
+        map.guard.x = x;
+        map.guard.y = y;
     }
     success
 }
@@ -115,7 +124,7 @@ fn coarse_candidate_obstacles(original_run: &Map, unique_positions: usize) -> Ve
     let mut candidates = Vec::with_capacity(unique_positions);
     for (y, row) in original_run.cells.iter().enumerate() {
         for (x, cell) in row.iter().enumerate() {
-            if (*cell).same(&Cell::Visited) {
+            if (*cell).same(&Cell::Visited(Default::default())) {
                 candidates.push((x, y));
             }
         }
@@ -123,9 +132,16 @@ fn coarse_candidate_obstacles(original_run: &Map, unique_positions: usize) -> Ve
     candidates
 }
 
+fn find_obstacle_locations(fresh_map: &Map, original_run: &Map, unique_positions: usize) -> usize {
+    let candidates = coarse_candidate_obstacles(original_run, unique_positions);
+    println!("");
+
+    0
+}
+
 struct Map {
     cells: Vec<Vec<Cell>>,
-    guard: (isize, isize),
+    guard: Guard,
 }
 
 impl Clone for Map {
@@ -138,30 +154,50 @@ impl Clone for Map {
 }
 
 fn parse(lines: &Vec<String>) -> Map {
-    let cells: Vec<Vec<Cell>> = lines.iter().map( | line| {
-        line.chars().map( | c| {
+    let mut guard: Option<Guard> = None;
+    let cells: Vec<Vec<Cell>> = lines.iter().enumerate().map( | (y, line)| {
+        line.chars().enumerate().map( | (x, c)| {
             match c {
                 '.' => Cell::Unvisited,
-                'X' => Cell::Visited,
+                'X' => Cell::Visited(Default::default()),
                 '#' => Cell::Crate,
-                '^' => Cell::GuardUp,
-                '>' => Cell::GuardRight,
-                'v' => Cell::GuardDown,
-                '<' => Cell::GuardLeft,
+                '^' => {
+                    guard = Some(Guard {
+                        x: x as isize,
+                        y: y as isize,
+                        dir: GuardDir::Up
+                    });
+                    Cell::Unvisited
+                },
+                '>' => {
+                    guard = Some(Guard {
+                        x: x as isize,
+                        y: y as isize,
+                        dir: GuardDir::Right
+                    });
+                    Cell::Unvisited
+                },
+                'v' => {
+                    guard = Some(Guard {
+                        x: x as isize,
+                        y: y as isize,
+                        dir: GuardDir::Down
+                    });
+                    Cell::Unvisited
+                },
+                '<' => {
+                    guard = Some(Guard {
+                        x: x as isize,
+                        y: y as isize,
+                        dir: GuardDir::Left
+                    });
+                    Cell::Unvisited
+                },
                 'O' => Cell::Obstruction,
                 _ => Cell::Unvisited,
             }
         }).collect()
     }).collect();
-    let mut guard: Option<(isize, isize)> = None;
-    for y in 0..lines.len() {
-        let x_len = cells[0].len();
-        for x in 0..x_len {
-            if cells[y][x].is_guard() {
-                guard = Some((x as isize, y as isize));
-            }
-        }
-    }
     let guard = guard.expect("No guard found!");
     Map {
         cells,
@@ -169,29 +205,97 @@ fn parse(lines: &Vec<String>) -> Map {
     }
 }
 
+#[derive(Clone)]
+struct Guard {
+    dir: GuardDir,
+    x: isize,
+    y: isize,
+}
+
+#[derive(Clone)]
+enum GuardDir {
+    Up,
+    Right,
+    Down,
+    Left,
+}
+
+impl Guard {
+    pub fn next_action(&self) -> (isize, isize) {
+        match &self.dir {
+            GuardDir::Up => (0, -1),
+            GuardDir::Left => (-1, 0),
+            GuardDir::Right => (1, 0),
+            GuardDir::Down => (0, 1),
+            _ => panic!("Can't happen"),
+        }
+    }
+
+    pub fn turn(&mut self) {
+        self.dir = match self.dir {
+            GuardDir::Up => GuardDir::Right,
+            GuardDir::Right => GuardDir::Down,
+            GuardDir::Down => GuardDir::Left,
+            GuardDir::Left => GuardDir::Up,
+        }
+    }
+
+    pub fn visited_before(&self, history: &VisitHistory) -> bool {
+        match self.dir {
+            GuardDir::Up => history.up,
+            GuardDir::Right => history.right,
+            GuardDir::Down => history.down,
+            GuardDir::Left => history.left,
+        }
+    }
+}
+
 #[derive(Clone, PartialEq)]
 enum Cell {
     Unvisited,
-    Visited,
-    GuardUp,
-    GuardDown,
-    GuardLeft,
-    GuardRight,
+    Visited(VisitHistory),
     Crate,
     Obstruction,
 }
+
 // If there is something directly in front of you, turn right 90 degrees.
 // Otherwise, take a step forward.
+
+#[derive(Clone, PartialEq)]
+struct VisitHistory {
+    up: bool,
+    right: bool,
+    down: bool,
+    left: bool,
+}
+
+impl Default for VisitHistory {
+    fn default() -> Self {
+        Self {
+            up: false,
+            right: false,
+            down: false,
+            left: false,
+        }
+    }
+}
+
+impl VisitHistory {
+    pub fn add(&mut self, dir: &GuardDir) {
+        match dir {
+            GuardDir::Up => self.up = true,
+            GuardDir::Right => self.right = true,
+            GuardDir::Down => self.down = true,
+            GuardDir::Left => self.left = true,
+        }
+    }
+}
 
 impl Display for Cell {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match self {
             Cell::Unvisited => write!(f, "."),
-            Cell::Visited => write!(f, "X"),
-            Cell::GuardUp => write!(f, "^"),
-            Cell::GuardDown => write!(f, "v"),
-            Cell::GuardLeft => write!(f, "<"),
-            Cell::GuardRight => write!(f, ">"),
+            Cell::Visited(_) => write!(f, "X"),
             Cell::Crate => write!(f, "#"),
             Cell::Obstruction => write!(f, "O"),
         }
@@ -199,18 +303,9 @@ impl Display for Cell {
 }
 
 impl Cell {
-    pub fn is_guard(&self) -> bool {
-        match self {
-            Cell::GuardUp => true,
-            Cell::GuardDown => true,
-            Cell::GuardLeft => true,
-            Cell::GuardRight => true,
-            _ => false,
-        }
-    }
 
     pub fn same(&self, b: &Cell) -> bool {
-        matches!((self, b), (Cell::Visited, Cell::Visited))
+        matches!((self, b), (Cell::Visited(_), Cell::Visited(_)))
     }
 }
 
