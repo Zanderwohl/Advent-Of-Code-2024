@@ -1,7 +1,6 @@
 mod util;
 
 use std::cmp::PartialEq;
-use std::collections::BinaryHeap;
 use std::error::Error;
 use std::fmt::{Display, Formatter};
 use crate::util::parsing;
@@ -15,6 +14,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     println!("The number of unique spaces the guard visited was:\n{}", guess);
 
     let obstacle_locations = find_obstacle_locations(&map, &new_map, guess);
+    println!("And the number of candidate obstacle locations is:\n{}", obstacle_locations);
 
     Ok(())
 }
@@ -26,6 +26,15 @@ fn run_map(map: &Map) -> Map {
         (running, _) = step_map(&mut modified_map);
     }
     modified_map
+}
+
+fn does_map_loop(map: &mut Map) -> bool {
+    let mut running = true;
+    let mut looping = false;
+    while running && !looping {
+        (running, looping) = step_map(map);
+    }
+    looping
 }
 
 fn count_visited_map(map: &Map) -> usize {
@@ -123,6 +132,7 @@ fn set_map(map: &mut Map, x: isize, y: isize, cell: &Cell) -> bool {
 }
 
 fn coarse_candidate_obstacles(original_run: &Map, unique_positions: usize) -> Vec<(usize, usize)> {
+    // println!("Counting candidates...");
     let mut candidates = Vec::with_capacity(unique_positions);
     for (y, row) in original_run.cells.iter().enumerate() {
         for (x, cell) in row.iter().enumerate() {
@@ -131,14 +141,21 @@ fn coarse_candidate_obstacles(original_run: &Map, unique_positions: usize) -> Ve
             }
         }
     }
+    // println!("Found {} candidates.", candidates.len());
     candidates
 }
 
 fn find_obstacle_locations(fresh_map: &Map, original_run: &Map, unique_positions: usize) -> usize {
     let candidates = coarse_candidate_obstacles(original_run, unique_positions);
-    println!("");
-
-    0
+    let len = candidates.len();
+    // println!("Trying {} locations!", len);
+    candidates.iter().enumerate().map(|(idx, (x, y))| {
+        // println!("\t#{}/{}", idx + 1, len);
+        let mut map = fresh_map.clone();
+        set_map(&mut map, *x as isize, *y as isize, &Cell::Obstruction);
+        let loops = does_map_loop(&mut map);
+        loops as usize
+    }).sum()
 }
 
 struct Map {
@@ -322,7 +339,7 @@ impl Cell {
 
 #[cfg(test)]
 mod tests {
-    use crate::{count_visited_map, parse, print_map, run_map};
+    use crate::{count_visited_map, find_obstacle_locations, parse, print_map, run_map};
 
     #[test]
     fn simple() {
@@ -346,5 +363,28 @@ mod tests {
         let guess = count_visited_map(&new_map);
 
         assert_eq!(guess, 41);
+    }
+
+    #[test]
+    fn test_loop() {
+        let test_input = "....#.....
+.........#
+..........
+..#.......
+.......#..
+..........
+.#..^.....
+........#.
+#.........
+......#...";
+        let lines: Vec<String> = test_input.split("\n").map(|x| x.to_string()).collect();
+        let map = parse(&lines);
+        println!("Running initial map.");
+        let new_map = run_map(&map);
+        println!("Ran map.");
+        let guess = count_visited_map(&new_map);
+        println!("Guard visited {} cells.", guess);
+        let obstacle_locations = find_obstacle_locations(&map, &new_map, guess);
+        assert_eq!(obstacle_locations, 6);
     }
 }
