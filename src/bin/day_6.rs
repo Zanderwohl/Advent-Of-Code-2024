@@ -3,6 +3,9 @@ mod util;
 use std::cmp::PartialEq;
 use std::error::Error;
 use std::fmt::{Display, Formatter};
+use std::sync::Arc;
+use std::thread;
+use std::thread::JoinHandle;
 use crate::util::parsing;
 use crate::util::vecstuff::deep_copy_matrix;
 
@@ -13,7 +16,8 @@ fn main() -> Result<(), Box<dyn Error>> {
     let guess = count_visited_map(&new_map);
     println!("The number of unique spaces the guard visited was:\n{}", guess);
 
-    let obstacle_locations = find_obstacle_locations(&map, &new_map, guess);
+    let thread_map = Arc::new(map);
+    let obstacle_locations = find_obstacle_locations(thread_map, &new_map, guess);
     println!("And the number of candidate obstacle locations is:\n{}", obstacle_locations);
 
     Ok(())
@@ -145,16 +149,21 @@ fn coarse_candidate_obstacles(original_run: &Map, unique_positions: usize) -> Ve
     candidates
 }
 
-fn find_obstacle_locations(fresh_map: &Map, original_run: &Map, unique_positions: usize) -> usize {
+fn find_obstacle_locations(fresh_map: Arc<Map>, original_run: &Map, unique_positions: usize) -> usize {
     let candidates = coarse_candidate_obstacles(original_run, unique_positions);
     let len = candidates.len();
-    // println!("Trying {} locations!", len);
-    candidates.iter().enumerate().map(|(idx, (x, y))| {
-        // println!("\t#{}/{}", idx + 1, len);
-        let mut map = fresh_map.clone();
-        set_map(&mut map, *x as isize, *y as isize, &Cell::Obstruction);
-        let loops = does_map_loop(&mut map);
-        loops as usize
+    let handles: Vec<JoinHandle<bool>> = candidates.into_iter().enumerate().map(|(idx, (x, y))| {
+        let thread_map = (fresh_map).clone();
+        thread::spawn(move || {
+            let mut map = (*thread_map).clone();
+            set_map(&mut map, x as isize, y as isize, &Cell::Obstruction);
+            let loops = does_map_loop(&mut map);
+            loops
+        })
+    }).collect();
+
+    handles.into_iter().map(|handle| {
+        handle.join().unwrap() as usize
     }).sum()
 }
 
