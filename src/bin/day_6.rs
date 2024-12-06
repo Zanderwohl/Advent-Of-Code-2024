@@ -52,9 +52,9 @@ fn step_map(mut map: &mut Map) -> (bool, bool) {
     }
     let (x, y) = (map.guard.x as usize, map.guard.y as usize);
 
-    //if map.cells[y][x].same(&Cell::Unvisited) {
+    if map.cells[y][x] == Cell::Unvisited {
         map.cells[y][x] = Cell::Visited(VisitHistory::default());
-    //}
+    }
     match &mut map.cells[y][x] {
         Cell::Visited(history) => {
             history.add(&map.guard.dir)
@@ -67,24 +67,26 @@ fn step_map(mut map: &mut Map) -> (bool, bool) {
     match next_cell {
         None => (false, false),
         Some(next_cell) => {
-            let running = match next_cell {
+            let (running, looping) = match next_cell {
                 Cell::Unvisited => {
-                    set_guard(&mut map, (x as isize) + dx, (y as isize) + dy)
+                    let running = set_guard(&mut map, (x as isize) + dx, (y as isize) + dy);
+                    (running, false)
                 },
                 Cell::Visited(visit_history) => {
-                    set_guard(&mut map, (x as isize) + dx, (y as isize) + dy)
+                    let running = set_guard(&mut map, (x as isize) + dx, (y as isize) + dy);
+                    (running, visit_history.has(&map.guard.dir))
                 },
                 Cell::Crate => {
                     map.guard.turn();
-                    true
+                    (true, false)
                 },
                 Cell::Obstruction => {
                     map.guard.turn();
-                    true
+                    (true, false)
                 }
                 _ => panic!("Can't handle multiple guards!"),
             };
-            (running, false)
+            (running, looping)
         }
     }
 }
@@ -250,7 +252,7 @@ impl Guard {
     }
 }
 
-#[derive(Clone, PartialEq)]
+#[derive(Clone, PartialEq, Debug)]
 enum Cell {
     Unvisited,
     Visited(VisitHistory),
@@ -261,7 +263,7 @@ enum Cell {
 // If there is something directly in front of you, turn right 90 degrees.
 // Otherwise, take a step forward.
 
-#[derive(Clone, PartialEq)]
+#[derive(Clone, PartialEq, Debug)]
 struct VisitHistory {
     up: bool,
     right: bool,
@@ -287,6 +289,15 @@ impl VisitHistory {
             GuardDir::Right => self.right = true,
             GuardDir::Down => self.down = true,
             GuardDir::Left => self.left = true,
+        }
+    }
+
+    pub fn has(&self, dir: &GuardDir) -> bool {
+        match dir {
+            GuardDir::Up => self.up,
+            GuardDir::Right => self.right,
+            GuardDir::Down => self.down,
+            GuardDir::Left => self.left,
         }
     }
 }
