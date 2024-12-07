@@ -142,10 +142,8 @@ impl Equation {
         }
         let lhs = acc;
         let rhs = self.right[idx];
-        let a = self.solvable_rec_2_inner(lhs, rhs, Operator3::Plus, idx);
-        let b = self.solvable_rec_2_inner(lhs, rhs, Operator3::Times, idx);
-
-        a || b
+        self.solvable_rec_2_inner(lhs, rhs, Operator3::Plus, idx)
+        || self.solvable_rec_2_inner(lhs, rhs, Operator3::Times, idx)
     }
 
     pub fn solvable_3_rec(&self) -> bool {
@@ -158,11 +156,9 @@ impl Equation {
         }
         let lhs = acc;
         let rhs = self.right[idx];
-        let a = self.solvable_rec_3_inner(lhs, rhs, Operator3::Plus, idx);
-        let b = self.solvable_rec_3_inner(lhs, rhs, Operator3::Times, idx);
-        let c = self.solvable_rec_3_inner(lhs, rhs, Operator3::Cat, idx);
-
-        a || b || c
+        self.solvable_rec_3_inner(lhs, rhs, Operator3::Plus, idx)
+        || self.solvable_rec_3_inner(lhs, rhs, Operator3::Times, idx)
+        || self.solvable_rec_3_inner(lhs, rhs, Operator3::Cat, idx)
     }
 
     fn solvable_rec_3_inner(&self, lhs: i64, rhs: i64, op: Operator3, idx: usize) -> bool {

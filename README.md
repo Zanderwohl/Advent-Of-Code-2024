@@ -157,8 +157,8 @@ Benchmark 1: cargo run --bin day_7 --release
 #### With Recursion
 ```
 Benchmark 1: cargo run --bin day_7 --release
-  Time (mean ± σ):     981.7 ms ±   9.9 ms    [User: 820.0 ms, System: 9.9 ms]
-  Range (min … max):   971.8 ms … 1004.0 ms    10 runs
+  Time (mean ± σ):     654.4 ms ±   4.4 ms    [User: 496.2 ms, System: 8.4 ms]
+  Range (min … max):   649.1 ms … 660.6 ms    10 runs
 ```
 
 ### Apple M2 Pro, 16 GB
