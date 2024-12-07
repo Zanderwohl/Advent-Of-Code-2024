@@ -33,6 +33,10 @@ pub fn pipe_split(lines: &Vec<String>) -> Vec<Vec<String>> {
     generic_split(lines, "|")
 }
 
+pub fn colon_split(lines: &Vec<String>) -> Vec<Vec<String>> {
+    generic_split(lines, ":")
+}
+
 pub fn generic_split(lines: &Vec<String>, on: &str) -> Vec<Vec<String>> {
     lines.iter().map(|line| {
         line.split(on).map(String::from).collect()

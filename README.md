@@ -132,3 +132,35 @@ Benchmark 1: cargo run --bin day_6 --release
   Time (mean ± σ):     409.3 ms ±   5.6 ms    [User: 235.2 ms, System: 14.4 ms]
   Range (min … max):   398.7 ms … 420.2 ms    10 runs
 ```
+
+## Day 7
+[Problem Text](https://adventofcode.com/2024/day/7)
+
+Oof, this was a tough one for run times.
+At first, I was just checking every combination then quitting as the accumulated total got too big.
+When I saw that people were getting smaller times than me in Rust,
+I returned to re-implement the solver using recursion,
+which meant that I could quit a lot quicker when I saw the accumulator was getting too big.
+Thus, I reduced my solution to under 1 second.
+
+### Benchmark
+
+### Apple M3 Pro, 18 GB
+
+#### Without Recursion
+```
+Benchmark 1: cargo run --bin day_7 --release
+  Time (mean ± σ):      1.861 s ±  0.024 s    [User: 1.694 s, System: 0.013 s]
+  Range (min … max):    1.831 s …  1.902 s    10 runs
+```
+
+#### With Recursion
+```
+Benchmark 1: cargo run --bin day_7 --release
+  Time (mean ± σ):     981.7 ms ±   9.9 ms    [User: 820.0 ms, System: 9.9 ms]
+  Range (min … max):   971.8 ms … 1004.0 ms    10 runs
+```
+
+### Apple M2 Pro, 16 GB
+```
+```
