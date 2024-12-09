@@ -5,7 +5,7 @@ use std::fmt::{Display, Formatter};
 use crate::util::parsing;
 
 fn main() -> Result<(), Box<dyn Error>> {
-    let lines = parsing::file_into_vec("files/day_4_input.txt")?;
+    let lines = parsing::file_into_vec("files/day_04_input.txt")?;
     let puzzle = Puzzle::new(&lines);
     let (xmas_count, x_mas_count) = puzzle.map(|puzzle| {
         (puzzle.entire_xmas_count(), puzzle.entire_x_mas_count())

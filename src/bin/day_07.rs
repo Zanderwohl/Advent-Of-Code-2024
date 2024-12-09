@@ -7,7 +7,7 @@ use crate::util::parsing::colon_split;
 mod util;
 
 fn main() -> Result<(), Box<dyn Error>> {
-    let lines = parsing::file_into_vec("files/day_7_input.txt")?;
+    let lines = parsing::file_into_vec("files/day_07_input.txt")?;
     let equations = parse(&lines);
     let total: i64 = equations.iter().enumerate().map(|(idx, eq)|{
         let solvable = eq.solvable_2_rec();

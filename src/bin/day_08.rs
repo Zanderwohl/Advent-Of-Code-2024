@@ -11,7 +11,7 @@ type Num = i32;
 
 
 fn main() -> Result<(), Box<dyn Error>> {
-    let lines = parsing::file_into_vec("files/day_8_input.txt")?;
+    let lines = parsing::file_into_vec("files/day_08_input.txt")?;
     let (nodes, (width, height)) = parse_nodes(&lines);
     let antinodes = find_antinodes(&nodes, width, height);
     println!("The number of antinodes is:\n{}", antinodes.len());

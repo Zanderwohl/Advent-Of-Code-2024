@@ -14,7 +14,7 @@ lazy_static! {
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
-    let lines = parsing::file_into_vec("files/day_3_input.txt")?;
+    let lines = parsing::file_into_vec("files/day_03_input.txt")?;
     let sum: u64 = lines.iter().map(|line| {
         eval_line(line)
     }).sum();

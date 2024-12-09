@@ -9,7 +9,7 @@ use crate::util::vecstuff::center;
 mod util;
 
 fn main() -> Result<(), Box<dyn Error>> {
-    let lines = parsing::file_into_vec("files/day_5_input.txt")?;
+    let lines = parsing::file_into_vec("files/day_05_input.txt")?;
     let (rules, changes) = parse_input(&lines);
     if let Some(rules) = rules {
         if let Ok(changes) = changes {

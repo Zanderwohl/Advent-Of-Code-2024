@@ -10,7 +10,7 @@ type Num = u16;
 const ASCII_ZERO: u8 = 48;
 
 fn main() -> Result<(), Box<dyn Error>> {
-    let bytes = ByteIterator::new("files/day_9_input.txt").unwrap();
+    let bytes = ByteIterator::new("files/day_09_input.txt").unwrap();
     let disk = parse(bytes);
     let disk_backup = disk.clone();
     let part_1 = solve_part_1(disk);
@@ -193,7 +193,7 @@ mod tests {
 
     #[test]
     fn tiny_input() {
-        let bytes = ByteIterator::new("files/day_9_tiny.txt").unwrap();
+        let bytes = ByteIterator::new("files/day_09_tiny.txt").unwrap();
         let disk = parse(bytes);
         let disk_backup = disk.clone();
         let part_1 = solve_part_1(disk);
@@ -212,7 +212,7 @@ mod tests {
     #[test]
     fn small_input() {
         "2333133121414131402";
-        let bytes = ByteIterator::new("files/day_9_small.txt").unwrap();
+        let bytes = ByteIterator::new("files/day_09_small.txt").unwrap();
         let disk = parse(bytes);
         let disk_backup = disk.clone();
         let part_1 = solve_part_1(disk);

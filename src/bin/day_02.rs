@@ -6,7 +6,7 @@ use crate::util::parsing::{convert_strings_matrix, whitepsace_split};
 pub mod util;
 
 fn main() -> Result<(), Box<dyn Error>> {
-    let lines = parsing::file_into_vec("files/day_2_input.txt")?;
+    let lines = parsing::file_into_vec("files/day_02_input.txt")?;
     let reports = whitepsace_split(lines);
     let reports = convert_strings_matrix::<i32>(&reports)?;
     let safe = count_safe(&reports);

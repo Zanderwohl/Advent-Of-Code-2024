@@ -7,7 +7,7 @@ use crate::util::parsing;
 use crate::util::vecstuff::deep_copy_matrix;
 
 fn main() -> Result<(), Box<dyn Error>> {
-    let lines = parsing::file_into_vec("files/day_6_input.txt")?;
+    let lines = parsing::file_into_vec("files/day_06_input.txt")?;
     let map = parse(&lines);
     let new_map = run_map(&map);
     let guess = count_visited_map(&new_map);

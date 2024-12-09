@@ -5,7 +5,7 @@ use std::error::Error;
 use util::parsing;
 
 fn main() -> Result<(), Box<dyn Error>> {
-    let lines = parsing::file_into_vec("files/day_1_input.txt")?;
+    let lines = parsing::file_into_vec("files/day_01_input.txt")?;
     let (a, b) = parsing::unzip_2(parsing::whitepsace_split(lines))?;
     let a = parsing::convert_strings::<i32>(&a)?;
     let b = parsing::convert_strings::<i32>(&b)?;
