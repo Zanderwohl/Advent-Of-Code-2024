@@ -208,3 +208,15 @@ Benchmark 1: cargo run --bin day_09 --release
   Time (mean ± σ):     381.2 ms ±   3.5 ms    [User: 204.7 ms, System: 22.3 ms]
   Range (min … max):   376.3 ms … 389.2 ms    10 runs
 ```
+
+## Day 10
+[Problem Text](https://adventofcode.com/2024/day/10)
+
+### Benchmark
+
+#### Apple M3 Pro, 18 GB
+```
+Benchmark 1: cargo run --bin day_10 --release
+  Time (mean ± σ):     151.5 ms ±   0.9 ms    [User: 33.1 ms, System: 9.2 ms]
+  Range (min … max):   149.9 ms … 152.8 ms    19 runs
+```
