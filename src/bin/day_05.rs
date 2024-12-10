@@ -1,6 +1,7 @@
 use std::error::Error;
 use std::fmt::{Display, Formatter};
 use std::num::ParseIntError;
+use std::time::Instant;
 use itertools::Itertools;
 use crate::util::parsing;
 use crate::util::parsing::{comma_split, convert_strings_matrix, pipe_split, transpose};
@@ -9,6 +10,8 @@ use crate::util::vecstuff::center;
 mod util;
 
 fn main() -> Result<(), Box<dyn Error>> {
+    let start = Instant::now();
+
     let lines = parsing::file_into_vec("files/day_05_input.txt")?;
     let (rules, changes) = parse_input(&lines);
     if let Some(rules) = rules {
@@ -35,6 +38,9 @@ fn main() -> Result<(), Box<dyn Error>> {
     } else {
         eprintln!("Couldn't parse rules.");
     }
+
+    let duration = start.elapsed();
+    println!("Completed in: {:?}", duration);
 
     Ok(())
 }

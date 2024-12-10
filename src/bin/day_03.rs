@@ -2,6 +2,7 @@ mod util;
 
 use std::cmp::min;
 use std::error::Error;
+use std::time::Instant;
 use crate::util::parsing;
 use lazy_static::lazy_static;
 use regex::Regex;
@@ -14,6 +15,8 @@ lazy_static! {
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
+    let start = Instant::now();
+
     let lines = parsing::file_into_vec("files/day_03_input.txt")?;
     let sum: u64 = lines.iter().map(|line| {
         eval_line(line)
@@ -21,6 +24,9 @@ fn main() -> Result<(), Box<dyn Error>> {
     println!("The sum of all mults is:\n{}", sum);
     let smart_sum = eval_do_dont(lines);
     println!("The sum of mults with conditionals is:\n{}", smart_sum);
+
+    let duration = start.elapsed();
+    println!("Completed in: {:?}", duration);
 
     Ok(())
 }

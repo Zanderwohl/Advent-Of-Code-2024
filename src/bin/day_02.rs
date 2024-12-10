@@ -1,4 +1,5 @@
 use std::error::Error;
+use std::time::Instant;
 use itertools::Itertools;
 use crate::util::{parsing, vecstuff};
 use crate::util::parsing::{convert_strings_matrix, whitepsace_split};
@@ -6,6 +7,8 @@ use crate::util::parsing::{convert_strings_matrix, whitepsace_split};
 pub mod util;
 
 fn main() -> Result<(), Box<dyn Error>> {
+    let start = Instant::now();
+
     let lines = parsing::file_into_vec("files/day_02_input.txt")?;
     let reports = whitepsace_split(lines);
     let reports = convert_strings_matrix::<i32>(&reports)?;
@@ -14,6 +17,9 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     let dampened_safe = count_dampened_safe(&reports);
     println!("Number of safe dampened reports:\n{}", dampened_safe);
+
+    let duration = start.elapsed();
+    println!("Completed in: {:?}", duration);
 
     Ok(())
 }

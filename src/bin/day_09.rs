@@ -1,6 +1,7 @@
 use std::error::Error;
 use std::fmt::{write, Display, Formatter};
 use std::path::Path;
+use std::time::Instant;
 use crate::util::bytewise::ByteIterator;
 
 mod util;
@@ -10,6 +11,8 @@ type Num = u16;
 const ASCII_ZERO: u8 = 48;
 
 fn main() -> Result<(), Box<dyn Error>> {
+    let start = Instant::now();
+
     let bytes = ByteIterator::new("files/day_09_input.txt").unwrap();
     let disk = parse(bytes);
     let disk_backup = disk.clone();
@@ -17,6 +20,9 @@ fn main() -> Result<(), Box<dyn Error>> {
     println!("The checksum of the fragmented disk is:\n{}", part_1);
     let part_2 = solve_part_2(disk_backup);
     println!("The checksum of the sorted but unfragmented disk is:\n{}", part_2);
+
+    let duration = start.elapsed();
+    println!("Completed in: {:?}", duration);
 
     Ok(())
 }

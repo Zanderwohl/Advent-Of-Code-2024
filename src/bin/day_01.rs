@@ -2,9 +2,12 @@ pub mod util;
 
 use std::collections::HashMap;
 use std::error::Error;
+use std::time::Instant;
 use util::parsing;
 
 fn main() -> Result<(), Box<dyn Error>> {
+    let start = Instant::now();
+
     let lines = parsing::file_into_vec("files/day_01_input.txt")?;
     let (a, b) = parsing::unzip_2(parsing::whitepsace_split(lines))?;
     let a = parsing::convert_strings::<i32>(&a)?;
@@ -15,6 +18,9 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     let similarity = similar(a, b);
     println!("Similarity is:\n{}", similarity);
+
+    let duration = start.elapsed();
+    println!("Completed in: {:?}", duration);
 
     Ok(())
 }

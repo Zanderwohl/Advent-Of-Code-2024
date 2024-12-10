@@ -2,6 +2,7 @@ use std::cmp::max;
 use std::collections::{HashMap, HashSet};
 use std::error::Error;
 use std::fmt::{Display, Formatter};
+use std::time::Instant;
 use crate::util::parsing;
 
 mod util;
@@ -11,12 +12,17 @@ type Num = i32;
 
 
 fn main() -> Result<(), Box<dyn Error>> {
+    let start = Instant::now();
+
     let lines = parsing::file_into_vec("files/day_08_input.txt")?;
     let (nodes, (width, height)) = parse_nodes(&lines);
     let antinodes = find_antinodes(&nodes, width, height);
     println!("The number of antinodes is:\n{}", antinodes.len());
     let resonant_antinodes = find_resonant_antinodes(&nodes, width, height);
     println!("The number of resonant antinodes is:\n{}", resonant_antinodes.len());
+
+    let duration = start.elapsed();
+    println!("Completed in: {:?}", duration);
 
     Ok(())
 }

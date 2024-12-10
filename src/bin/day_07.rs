@@ -1,5 +1,6 @@
 use std::error::Error;
 use std::fmt::{Display, Formatter};
+use std::time::Instant;
 use crate::util::bitfutz::get_bit_at;
 use crate::util::parsing;
 use crate::util::parsing::colon_split;
@@ -7,6 +8,8 @@ use crate::util::parsing::colon_split;
 mod util;
 
 fn main() -> Result<(), Box<dyn Error>> {
+    let start = Instant::now();
+
     let lines = parsing::file_into_vec("files/day_07_input.txt")?;
     let equations = parse(&lines);
     let total: i64 = equations.iter().enumerate().map(|(idx, eq)|{
@@ -28,6 +31,9 @@ fn main() -> Result<(), Box<dyn Error>> {
         }
     }).sum();
     println!("The total revised calibration result is:\n{}", total_3);
+
+    let duration = start.elapsed();
+    println!("Completed in: {:?}", duration);
 
     Ok(())
 }

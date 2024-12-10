@@ -3,10 +3,13 @@ mod util;
 use std::cmp::PartialEq;
 use std::error::Error;
 use std::fmt::{Display, Formatter};
+use std::time::Instant;
 use crate::util::parsing;
 use crate::util::vecstuff::deep_copy_matrix;
 
 fn main() -> Result<(), Box<dyn Error>> {
+    let start = Instant::now();
+
     let lines = parsing::file_into_vec("files/day_06_input.txt")?;
     let map = parse(&lines);
     let new_map = run_map(&map);
@@ -15,6 +18,9 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     let obstacle_locations = find_obstacle_locations(&map, &new_map, guess);
     println!("And the number of candidate obstacle locations is:\n{}", obstacle_locations);
+
+    let duration = start.elapsed();
+    println!("Completed in: {:?}", duration);
 
     Ok(())
 }

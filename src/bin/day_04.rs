@@ -2,9 +2,12 @@ mod util;
 
 use std::error::Error;
 use std::fmt::{Display, Formatter};
+use std::time::Instant;
 use crate::util::parsing;
 
 fn main() -> Result<(), Box<dyn Error>> {
+    let start = Instant::now();
+
     let lines = parsing::file_into_vec("files/day_04_input.txt")?;
     let puzzle = Puzzle::new(&lines);
     let (xmas_count, x_mas_count) = puzzle.map(|puzzle| {
@@ -12,6 +15,9 @@ fn main() -> Result<(), Box<dyn Error>> {
     }).unwrap_or((0, 0));
     println!("Instances of 'XMAS' in puzzle:\n{}", xmas_count);
     println!("Instances of X-'MAS' in puzzle:\n{}", x_mas_count);
+
+    let duration = start.elapsed();
+    println!("Completed in: {:?}", duration);
 
     Ok(())
 }

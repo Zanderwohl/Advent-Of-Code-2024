@@ -3,7 +3,10 @@
 Hi, I'm Alexander Lowry and these are my solutions to [Advent of Code 2024](https://adventofcode.com/2024/).
 I used Rust because I like it!
 
-I benchmark my solutions with [hyperfine](https://github.com/sharkdp/hyperfine) and the `--release` flag.
+I benchmark my solutions with the `--release` flag in two ways:
+[hyperfine](https://github.com/sharkdp/hyperfine) (which means a minimum 150ms for OS stuff),
+and internally using `std::time::Instant;`, because hyperfine doesn't seem to measure anything below 150ms
+(`fn main() {}` takes 151ms on my machine!).
 I haven't modified my `cargo.toml` yet, because I'm okay with the defaults for now :).
 
 ```hyperfine 'cargo run --bin day_0{n} --release' --warmup 2```
@@ -18,6 +21,7 @@ We're always going to be parsing a bunch of from files, so I've added a bunch of
 ### Benchmark
 
 #### Apple M3 Pro, 18 GB
+`Completed in: 797.25µs`
 ```
 Benchmark 1: cargo run --bin day_01 --release
   Time (mean ± σ):     163.6 ms ±  10.7 ms    [User: 35.4 ms, System: 12.6 ms]
@@ -37,6 +41,7 @@ Range (min … max):   163.4 ms … 191.4 ms    15 runs
 ### Benchmark
 
 #### Apple M3 Pro, 18 GB
+`Completed in: 1.054959ms`
 ```
 Benchmark 1: cargo run --bin day_02 --release
   Time (mean ± σ):     166.4 ms ±  10.0 ms    [User: 36.4 ms, System: 13.9 ms]
@@ -56,6 +61,7 @@ Benchmark 1: cargo run --bin day_02 --release
 ### Benchmark
 
 #### Apple M3 Pro, 18 GB
+`Completed in: 1.484083ms`
 ```
 Benchmark 1: cargo run --bin day_03 --release
   Time (mean ± σ):     172.7 ms ±   2.0 ms    [User: 35.2 ms, System: 12.1 ms]
@@ -75,6 +81,7 @@ Benchmark 1: cargo run --bin day_03 --release
 ### Benchmark
 
 #### Apple M3 Pro, 18 GB
+`Completed in: 1.139375ms`
 ```
 Benchmark 1: cargo run --bin day_04 --release
   Time (mean ± σ):     152.9 ms ±   3.5 ms    [User: 32.9 ms, System: 9.9 ms]
@@ -94,6 +101,7 @@ Benchmark 1: cargo run --bin day_04 --release
 ### Benchmark
 
 #### Apple M3 Pro, 18 GB
+`Completed in: 15.673542ms`
 ```
 Benchmark 1: cargo run --bin day_05 --release
   Time (mean ± σ):     160.1 ms ±   2.6 ms    [User: 40.8 ms, System: 8.5 ms]
@@ -120,6 +128,7 @@ The history is now a fixed size allocated once.
 ### Benchmark
 
 #### Apple M3 Pro, 18 GB
+`Completed in: 182.549875ms`
 ```
 Benchmark 1: cargo run --bin day_06 --release
   Time (mean ± σ):     353.0 ms ±   1.2 ms    [User: 196.1 ms, System: 7.2 ms]
@@ -155,6 +164,7 @@ Benchmark 1: cargo run --bin day_07 --release
 ```
 
 ##### With Recursion
+`Completed in: 483.940916ms`
 ```
 Benchmark 1: cargo run --bin day_07 --release
   Time (mean ± σ):     654.4 ms ±   4.4 ms    [User: 496.2 ms, System: 8.4 ms]
@@ -176,6 +186,7 @@ Benchmark 1: cargo run --bin day_07 --release
 ### Benchmark
 
 #### Apple M3 Pro, 18 GB
+`Completed in: 316.042µs`
 ```
 Benchmark 1: cargo run --bin day_08 --release
   Time (mean ± σ):     153.9 ms ±   2.4 ms    [User: 32.9 ms, System: 10.3 ms]
@@ -196,6 +207,7 @@ Benchmark 1: cargo run --bin day_08 --release
 ### Benchmark
 
 #### Apple M3 Pro, 18 GB
+`Completed in: 167.809167ms`
 ```
 Benchmark 1: cargo run --bin day_09 --release
   Time (mean ± σ):     343.3 ms ±   4.0 ms    [User: 177.0 ms, System: 18.1 ms]
@@ -215,8 +227,13 @@ Benchmark 1: cargo run --bin day_09 --release
 ### Benchmark
 
 #### Apple M3 Pro, 18 GB
+`Completed in: 658.458µs`
 ```
 Benchmark 1: cargo run --bin day_10 --release
   Time (mean ± σ):     151.5 ms ±   0.9 ms    [User: 33.1 ms, System: 9.2 ms]
   Range (min … max):   149.9 ms … 152.8 ms    19 runs
+```
+
+#### Apple M2 Pro, 16 GB
+```
 ```

@@ -1,5 +1,6 @@
 use std::collections::HashSet;
 use std::error::Error;
+use std::time::Instant;
 use crate::util::parsing;
 
 mod util;
@@ -9,11 +10,16 @@ type Num = u8;
 
 
 fn main() -> Result<(), Box<dyn Error>> {
+    let start = Instant::now();
+
     let lines = parsing::file_into_vec("files/day_10_input.txt")?;
     let map = parse(&lines);
     let (scores, ratings) = score_and_rate_trails(&map);
     println!("The total scores of all trailheads are:\n{}", scores);
     println!("The total ratings of all trailheads are:\n{}", ratings);
+
+    let duration = start.elapsed();
+    println!("Completed in: {:?}", duration);
 
     Ok(())
 }
@@ -27,51 +33,41 @@ fn parse(lines: &Vec<String>) -> Vec<Vec<Num>> {
 }
 
 pub fn score_and_rate_trails(map: &Vec<Vec<Num>>) -> (usize, usize) {
-    map.iter().enumerate().map(|(y, line)| {
-        line.iter().enumerate().map(|(x, num)| {
-            if *num == 0 {
-                score_and_rate_trail(map, x, y)
-            } else {
-                (0, 0)
+    let mut scores: usize = 0;
+    let mut ratings: usize = 0;
+    for y in 0..map.len() {
+        for x in 0..map[0].len() {
+            if map[y][x] == 0 {
+                let (score, rating) = score_and_rate_trail(map, x, y);
+                scores += score;
+                ratings += rating;
             }
-        }).fold((0usize, 0usize), |(sum_x, sum_y), (x, y)| (sum_x + x, sum_y + y))
-    }).fold((0usize, 0usize), |(sum_x, sum_y), (x, y)| (sum_x + x, sum_y + y))
+        }
+    }
+    (scores, ratings)
 }
 
 pub fn score_and_rate_trail(map: &Vec<Vec<Num>>, x: usize, y: usize) -> (usize, usize) {
-    let rating = rate_trail_inner(map, x, y);
-    let mut score = HashSet::new();
+    let mut rating = Vec::new();
+    rate_trail_inner(map, x, y, &mut rating);
+    let mut score = HashSet::with_capacity(rating.len());
     for (x_, y_) in &rating {
         score.insert((*x_, *y_));
     }
 
-    // println!("{:?}", n);
     (score.len(), rating.len())
 }
 
-pub fn rate_trail_inner(map: &Vec<Vec<Num>>, x: usize, y: usize) -> Vec<(usize, usize)> {
+pub fn rate_trail_inner(map: &Vec<Vec<Num>>, x: usize, y: usize, mut vec: &mut Vec<(usize, usize)>) {
     let current_n = map[y][x];
-    // println!("{}{}, {} -- {}", " ".repeat(current_n as usize), x, y, current_n);
-    /*let space = " ".repeat(current_n as usize);
-    for y_ in 0..map.len() {
-        print!("{}", space);
-        for x_ in 0..map[0].len() {
-            if x == x_ && y == y_ {
-                print!("X");
-            } else {
-                print!("{}", map[y_][x_]);
-            }
-        }
-        println!();
-    }
-    println!("----");*/
     if current_n == 9 {
-        return vec![(x, y)];
+        vec.push((x, y));
+        return;
     }
     let dirs = directions(map, x, y);
-    dirs.iter().map(|(next_x, next_y)| {
-        rate_trail_inner(map, *next_x, *next_y)
-    }).flatten().collect()
+    for (next_x, next_y) in dirs {
+        rate_trail_inner(map, next_x, next_y, &mut vec)
+    }
 }
 
 
