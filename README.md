@@ -7,9 +7,12 @@ I benchmark my solutions with the `--release` flag in two ways:
 [hyperfine](https://github.com/sharkdp/hyperfine) (which means a minimum 150ms for OS stuff),
 and internally using `std::time::Instant;`, because hyperfine doesn't seem to measure anything below 150ms
 (`fn main() {}` takes 151ms on my machine!).
+The downside, of course, is that I am just marking two times, ignoring any switching the CPU is doing.
+Times depend on if the computer is doing anything else!
+
 I haven't modified my `cargo.toml` yet, because I'm okay with the defaults for now :).
 
-```hyperfine 'cargo run --bin day_0{n} --release' --warmup 2```
+```hyperfine 'cargo run --bin day_{n:02} --release' --warmup 2```
 
 ## Day 1
 
@@ -29,6 +32,7 @@ Benchmark 1: cargo run --bin day_01 --release
 ```
 
 #### Apple M2 Pro, 16 GB
+`Completed in: 566.667µs`
 ```
 Benchmark 1: cargo run --bin day_01 --release
 Time (mean ± σ):     173.3 ms ±   5.7 ms    [User: 32.6 ms, System: 13.8 ms]
@@ -49,6 +53,7 @@ Benchmark 1: cargo run --bin day_02 --release
 ```
 
 #### Apple M2 Pro, 16 GB
+`Completed in: 841.292µs`
 ```
 Benchmark 1: cargo run --bin day_02 --release
   Time (mean ± σ):     175.3 ms ±   7.4 ms    [User: 32.4 ms, System: 14.1 ms]
@@ -69,6 +74,7 @@ Benchmark 1: cargo run --bin day_03 --release
 ```
 
 #### Apple M2 Pro, 16 GB
+`Completed in: 1.491125ms`
 ```
 Benchmark 1: cargo run --bin day_03 --release
   Time (mean ± σ):     193.0 ms ±   1.9 ms    [User: 35.8 ms, System: 15.6 ms]
@@ -89,6 +95,7 @@ Benchmark 1: cargo run --bin day_04 --release
 ```
 
 #### Apple M2 Pro, 16 GB
+`Completed in: 880.208µs`
 ```
 Benchmark 1: cargo run --bin day_04 --release
   Time (mean ± σ):     174.7 ms ±   3.0 ms    [User: 33.7 ms, System: 15.3 ms]
@@ -110,6 +117,7 @@ Benchmark 1: cargo run --bin day_05 --release
 ```
 
 #### Apple M2 Pro, 16 GB
+`Completed in: 8.766542ms`
 ```
 Benchmark 1: cargo run --bin day_05 --release
   Time (mean ± σ):     182.1 ms ±   3.0 ms    [User: 41.9 ms, System: 14.2 ms]
@@ -136,6 +144,7 @@ Benchmark 1: cargo run --bin day_06 --release
 ```
 
 #### Apple M2 Pro, 16 GB
+`Completed in: 196.226708ms`
 ```
 Benchmark 1: cargo run --bin day_06 --release
   Time (mean ± σ):     409.3 ms ±   5.6 ms    [User: 235.2 ms, System: 14.4 ms]
@@ -174,6 +183,7 @@ Benchmark 1: cargo run --bin day_07 --release
 #### Apple M2 Pro, 16 GB
 
 ##### With Recursion
+`Completed in: 529.033958ms`
 ```
 Benchmark 1: cargo run --bin day_07 --release
   Time (mean ± σ):     718.5 ms ±   3.2 ms    [User: 539.7 ms, System: 23.0 ms]
@@ -194,6 +204,7 @@ Benchmark 1: cargo run --bin day_08 --release
 ```
 
 #### Apple M2 Pro, 16 GB
+`Completed in: 369.625µs`
 ```
 Benchmark 1: cargo run --bin day_08 --release
   Time (mean ± σ):     172.2 ms ±   3.7 ms    [User: 31.9 ms, System: 14.3 ms]
@@ -215,6 +226,7 @@ Benchmark 1: cargo run --bin day_09 --release
 ```
 
 #### Apple M2 Pro, 16 GB
+`Completed in: 187.164084ms`
 ```
 Benchmark 1: cargo run --bin day_09 --release
   Time (mean ± σ):     381.2 ms ±   3.5 ms    [User: 204.7 ms, System: 22.3 ms]
@@ -235,5 +247,10 @@ Benchmark 1: cargo run --bin day_10 --release
 ```
 
 #### Apple M2 Pro, 16 GB
+`Completed in: 673.125µs`
 ```
+Benchmark 1: cargo run --release --bin day_10
+  Time (mean ± σ):     174.5 ms ±   3.3 ms    [User: 32.9 ms, System: 15.0 ms]
+  Range (min … max):   166.9 ms … 179.5 ms    17 runs
+
 ```
