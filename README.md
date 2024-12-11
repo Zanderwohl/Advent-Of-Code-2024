@@ -254,3 +254,20 @@ Benchmark 1: cargo run --release --bin day_10
   Range (min … max):   166.9 ms … 179.5 ms    17 runs
 
 ```
+
+## Day 10
+[Problem Text](https://adventofcode.com/2024/day/11)
+
+### Benchmark
+
+#### Apple M3 Pro, 18 GB
+`Completed in: 54.181917ms`
+```
+Benchmark 1: cargo run --release --bin day_11
+  Time (mean ± σ):     157.4 ms ±   1.2 ms    [User: 39.4 ms, System: 8.4 ms]
+  Range (min … max):   155.3 ms … 159.2 ms    18 runs
+```
+
+#### Apple M2 Pro, 16 GB
+```
+```
