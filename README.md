@@ -258,6 +258,9 @@ Benchmark 1: cargo run --release --bin day_10
 ## Day 11
 [Problem Text](https://adventofcode.com/2024/day/11)
 
+Oddly performed batter on the M2.
+Probably got more consistent processor scheduling.
+
 ### Benchmark
 
 #### Apple M3 Pro, 18 GB
@@ -269,12 +272,18 @@ Benchmark 1: cargo run --release --bin day_11
 ```
 
 #### Apple M2 Pro, 16 GB
-``
+`Completed in: 7.541333ms`
 ```
+Benchmark 1: cargo run --release --bin day_11
+  Time (mean ± σ):     181.5 ms ±   6.4 ms    [User: 37.4 ms, System: 15.1 ms]
+  Range (min … max):   169.5 ms … 189.7 ms    17 runs
 ```
 
 ## Day 12
 [Problem Text](https://adventofcode.com/2024/day/12)
+
+Again, I'm not sure why this completes 12x faster on the M2.
+Perhaps it's just the coincidence of fewer background tasks or less context switching.
 
 ### Benchmark
 
@@ -287,6 +296,9 @@ Benchmark 1: cargo run --release --bin day_12
 ```
 
 #### Apple M2 Pro, 16 GB
-``
+`Completed in: 1.01075ms`
 ```
+Benchmark 1: cargo run --release --bin day_12
+  Time (mean ± σ):     173.9 ms ±   5.5 ms    [User: 29.4 ms, System: 14.7 ms]
+  Range (min … max):   166.5 ms … 185.4 ms    17 runs
 ```
