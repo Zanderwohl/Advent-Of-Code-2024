@@ -245,4 +245,15 @@ mod tests {
         assert_eq!(bulk_price_actual, 368);
         Ok(())
     }
+
+    #[test]
+    fn test_reddit() -> Result<(), Box<dyn Error>> {
+        /// From this reddit thread:
+        /// https://www.reddit.com/r/adventofcode/comments/1hcfurk/2024_day_12_another_test_case/
+        let lines = parsing::file_into_vec("files/day_12_reddit.txt")?;
+        let mut garden = parse_input(&lines);
+        let (price_actual, bulk_price_actual) = find_total_price(&mut garden);
+        assert_eq!(bulk_price_actual, 946);
+        Ok(())
+    }
 }
