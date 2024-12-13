@@ -303,8 +303,10 @@ Benchmark 1: cargo run --release --bin day_12
   Range (min … max):   166.5 ms … 185.4 ms    17 runs
 ```
 
-## Day 12
+## Day 13
 [Problem Text](https://adventofcode.com/2024/day/13)
+
+Perhaps my laptop is slowing its clock due to not being plugged in?
 
 ### Benchmark
 
@@ -314,6 +316,54 @@ Benchmark 1: cargo run --release --bin day_12
 Benchmark 1: cargo run --release --bin day_13
   Time (mean ± σ):     171.0 ms ±   1.6 ms    [User: 33.7 ms, System: 11.7 ms]
   Range (min … max):   168.5 ms … 174.2 ms    17 runs
+```
+
+#### Apple M2 Pro, 16 GB
+`Completed in: 677.875µs`
+```
+Benchmark 1: cargo run --release --bin day_13
+  Time (mean ± σ):     197.4 ms ±   6.7 ms    [User: 32.3 ms, System: 16.9 ms]
+  Range (min … max):   184.8 ms … 209.5 ms    15 runs
+```
+
+## Day 14
+[Problem Text](https://adventofcode.com/2024/day/14)
+
+### Benchmark
+
+#### Apple M3 Pro, 18 GB
+``
+```
+```
+
+#### Apple M2 Pro, 16 GB
+``
+```
+```
+
+## Day 15
+[Problem Text](https://adventofcode.com/2024/day/15)
+
+### Benchmark
+
+#### Apple M3 Pro, 18 GB
+``
+```
+```
+
+#### Apple M2 Pro, 16 GB
+``
+```
+```
+
+## Day 16
+[Problem Text](https://adventofcode.com/2024/day/16)
+
+### Benchmark
+
+#### Apple M3 Pro, 18 GB
+``
+```
 ```
 
 #### Apple M2 Pro, 16 GB
