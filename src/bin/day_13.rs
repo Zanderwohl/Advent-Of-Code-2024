@@ -77,11 +77,10 @@ impl Display for Machine {
 
 impl Machine {
     pub fn solve(&self) -> Option<Num> {
-        let a = self.n_a();
-        let b = self.n_b();
-        if a.fract() < f64::EPSILON && b.fract() < f64::EPSILON {
-            let solution = a * 3.0 + b;
-            return Some(solution as Num)
+        let (a_x, a_y) = self.n_a_sad(0);
+        let (b_x, b_y) = self.n_b_sad(0);
+        if a_x % a_y == 0 && b_x % b_y == 0 {
+            return Some((a_x / a_y) * 3 + (b_x / b_y))
         }
         None
     }
@@ -92,7 +91,7 @@ impl Machine {
         let (b_x, b_y) = self.n_b_sad(plus);
         // is a_x / a_y an int? is b_x / b_y an int?
 
-        if a_x % a_y == 0 && b_x & b_y == 0 {
+        if a_x % a_y == 0 && b_x % b_y == 0 {
             return Some((a_x / a_y) * 3 + (b_x / b_y))
         }
         None
